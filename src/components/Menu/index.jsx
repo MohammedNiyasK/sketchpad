@@ -16,18 +16,24 @@ const Menu = () => {
   const dispatch = useDispatch();
   const handleMenuClick = (itemName) => {
     dispatch(menuItemClick(itemName));
+    socket.emit("menuItem", itemName);
   };
 
   const handleActionItemClick = (itemName) => {
     dispatch(actionItemClick(itemName));
   };
 
-  const handleConfigChange = (config) => {
-    dispatch(menuItemClick(config.activeMenuItem));
+  const handleConfigChange = (itemName) => {
+    console.log(itemName);
+    dispatch(menuItemClick(itemName));
   };
 
   useEffect(() => {
-    socket.on("changeConfig", handleConfigChange);
+    socket.on("menuItem", handleConfigChange);
+
+    return () => {
+      socket.off("menuItem", handleConfigChange);
+    };
   }, []);
 
   const item = useSelector((state) => state.menu.activeMenuItem);

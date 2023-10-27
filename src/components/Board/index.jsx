@@ -114,7 +114,7 @@ const Board = () => {
     if (!canvas) return;
     const context = canvas.getContext("2d");
 
-    socket.emit("changeConfig", { color, size, activeMenuItem });
+    // socket.emit("changeConfig", { color, size, activeMenuItem });
 
     const changeConfig = (color, size) => {
       context.strokeStyle = color;
