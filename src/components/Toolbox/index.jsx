@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { COLORS, MENU_ITEMS } from "../../constants";
 import { changeColor, changeBrushSize } from "../../slice/toolboxSlice";
+import { socket } from "../../socket";
 
 const Toolbox = () => {
   const activeItem = useSelector((state) => state.menu.activeMenuItem);
@@ -15,6 +16,23 @@ const Toolbox = () => {
   const handleChangeColor = (newColor) => {
     dispatch(changeColor({ activeItem, color: newColor }));
   };
+
+  const handleConfig = (data) => {
+    dispatch(
+      changeBrushSize({ activeItem: data.activeMenuItem, size: data.size })
+    );
+    dispatch(
+      changeColor({ activeItem: data.activeMenuItem, color: data.color })
+    );
+  };
+
+  useEffect(() => {
+    socket.on("changeConfig", handleConfig);
+
+    return () => {
+      socket.off("changeConfig", handleConfig);
+    };
+  }, [size, color]);
   return (
     <div className="p-5 absolute top-1/4 left-5 w-64 rounded-md shadow-md border-purple-300 border">
       {activeItem !== MENU_ITEMS.ERASER && (

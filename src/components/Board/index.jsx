@@ -84,7 +84,6 @@ const Board = () => {
     canvas.addEventListener("mouseup", handleMouseUp);
 
     const handleBeginPath = (path) => {
-      console.log(path);
       beginPath(path.x, path.y);
     };
 
@@ -115,8 +114,7 @@ const Board = () => {
     if (!canvas) return;
     const context = canvas.getContext("2d");
 
-    socket.emit("changeConfig", { color, size });
-
+    socket.emit("changeConfig", { color, size, activeMenuItem });
 
     const changeConfig = (color, size) => {
       context.strokeStyle = color;

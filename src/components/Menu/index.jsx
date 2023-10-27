@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPencil,
@@ -8,8 +8,9 @@ import {
   faRotateRight,
   faFileArrowDown,
 } from "@fortawesome/free-solid-svg-icons";
-import { menuItemClick,actionItemClick } from "../../slice/menuItemSlice";
+import { menuItemClick, actionItemClick } from "../../slice/menuItemSlice";
 import { MENU_ITEMS } from "../../constants";
+import { socket } from "../../socket";
 
 const Menu = () => {
   const dispatch = useDispatch();
@@ -18,8 +19,16 @@ const Menu = () => {
   };
 
   const handleActionItemClick = (itemName) => {
-    dispatch(actionItemClick(itemName))
+    dispatch(actionItemClick(itemName));
   };
+
+  const handleConfigChange = (config) => {
+    dispatch(menuItemClick(config.activeMenuItem));
+  };
+
+  useEffect(() => {
+    socket.on("changeConfig", handleConfigChange);
+  }, []);
 
   const item = useSelector((state) => state.menu.activeMenuItem);
   const iconStyle =
